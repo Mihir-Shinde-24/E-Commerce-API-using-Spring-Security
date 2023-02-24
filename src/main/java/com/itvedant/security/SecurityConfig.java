@@ -42,13 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST,"/addadmin").hasAnyRole("SUPER")
 			.antMatchers(HttpMethod.POST,"/adduser").permitAll()
 			.antMatchers(HttpMethod.PUT,"/updateuser").hasAnyRole("USER")
-			.antMatchers(HttpMethod.DELETE,"/deleteadmin").hasAnyRole("SUPER")
-			.antMatchers(HttpMethod.DELETE,"/deleteuser").hasAnyRole("SUPER","ADMIN","USER")
+			.antMatchers(HttpMethod.DELETE,"/deleteadmin/**").hasAnyRole("SUPER")
+			.antMatchers(HttpMethod.DELETE,"/deleteuser/**").hasAnyRole("SUPER","ADMIN","USER")
 			
 			.antMatchers(HttpMethod.GET, "/getproducts").permitAll()			
 			.antMatchers(HttpMethod.POST,"/addproduct").hasAnyRole("SUPER","ADMIN")
 			.antMatchers(HttpMethod.PUT,"/updateproduct").hasAnyRole("SUPER","ADMIN")
-			.antMatchers(HttpMethod.DELETE,"/deleteproduct").hasAnyRole("SUPER","ADMIN")
+			.antMatchers(HttpMethod.DELETE,"/deleteproduct/**").hasAnyRole("SUPER","ADMIN")
 			
 			.and()
 			.httpBasic();

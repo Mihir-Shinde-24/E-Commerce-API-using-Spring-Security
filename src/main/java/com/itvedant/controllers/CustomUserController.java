@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itvedant.customannotations.LoggedInUser;
 import com.itvedant.exceptions.CustomUserDBException;
 import com.itvedant.models.CustomUser;
 import com.itvedant.services.CustomUserServicesInterface;
@@ -61,18 +62,39 @@ public class CustomUserController {
 
 	// 4. Update User
 	@PutMapping("/updateuser")
-	public ResponseEntity<String> updateCustomUser(@RequestBody CustomUser newUser)
+	public ResponseEntity<String> updateCustomUser(@RequestBody CustomUser newUser, @LoggedInUser CustomUser loggedInUser)
 	{
-		String msg = service.updateCustomUser(newUser);
-		return ResponseEntity.status(HttpStatus.OK).body(msg);
+		if(loggedInUser.getId() == newUser.getId())
+		{
+			newUser.setPasscode(encoder.encode(newUser.getPasscode()));
+			String msg = service.updateCustomUser(newUser);
+			return ResponseEntity.status(HttpStatus.OK).body(msg);
+		}
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please select your id only.");
 	}
 
 	// 5. Delete User
 	@DeleteMapping("/deleteuser/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable("id") int id)
+	public ResponseEntity<String> deleteUser(@PathVariable("id") int id, @LoggedInUser CustomUser loggedInUser)
 	{
-		String msg = service.deleteUser(id);
-		return ResponseEntity.status(HttpStatus.OK).body(msg);
+		if(loggedInUser.getRole().equals("ROLE_USER"))
+		{
+			if(loggedInUser.getId() == id)
+			{
+				String msg = service.deleteUser(id);
+				return ResponseEntity.status(HttpStatus.OK).body(msg);
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please select your id only.");
+		}
+		else 
+		{
+			String msg = service.deleteUser(id);
+			return ResponseEntity.status(HttpStatus.OK).body(msg);
+		}
+		
+		
+		
 	}
 	// 6. Delete Admin
 	@DeleteMapping("/deleteadmin/{id}")
