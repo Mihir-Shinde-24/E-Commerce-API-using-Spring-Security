@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.itvedant.models.CustomUser;
 
-public interface Services {
+public interface CustomUserServicesInterface {
 
 	/* CRUD OPERATIONS */
 	
@@ -18,8 +18,11 @@ public interface Services {
 	public String addAdmin(CustomUser newAdmin);
 	
 	// 4. Update CustomUser
-	public String updateCustomUser(CustomUser newCustomUser);
+	public String updateCustomUser(CustomUser newUser);
 	
 	// 5. Delete CustomUser
-	public List<CustomUser> deleteCustomUser(int id);
+	public String deleteUser(int id);
+	
+	// 6. Delete Admin
+	public String deleteAdmin(int id);
 }
